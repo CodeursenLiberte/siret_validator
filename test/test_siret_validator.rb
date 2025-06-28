@@ -35,11 +35,11 @@ class TestSiretValidator < Minitest::Spec
       ""                => :wrong_siret_format, # blank
       "8216114310003"   => :wrong_siret_format, # too short
       "invalid--siret"  => :wrong_siret_format, # invalid characters
-      "82161143100031"  => true,                # standard siret
+      "82161143100031"  => nil,                 # valid siret
       "821611431000314" => :wrong_siret_format, # too long
       "82161143100039"  => :invalid,            # invalid luhn
-      "35600000000048"  => true,                # La Poste siège
-      "35600000041461"  => true,                # La Poste établissement
+      "35600000000048"  => nil,                 # La Poste siège
+      "35600000041461"  => nil,                 # La Poste établissement
       "35600000041462"  => :invalid             # invalid La Poste établissement
     }
 
@@ -89,7 +89,7 @@ class TestSiretValidator < Minitest::Spec
 
   def assert_siret_validity(siret, expected_error)
     model = Company.new(siret: siret).tap(&:validate)
-    if expected_error.is_a? Symbol
+    if expected_error.present?
       assert(model.errors.where(:siret, expected_error).present?, "Expected '#{siret}' to generate a ':#{expected_error}' validation error")
     else
       assert_empty(model.errors[:siret], "Expected '#{siret}' to be valid")
