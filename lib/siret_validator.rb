@@ -2,7 +2,7 @@
 
 require "active_model"
 require "active_support/i18n"
-I18n.load_path += Dir[File.dirname(__FILE__) + "/locale/*.yml"]
+I18n.load_path += Dir["#{File.dirname(__FILE__)}/locale/*.yml"]
 
 module ActiveModel
   module Validations
@@ -81,4 +81,3 @@ module ActiveModel
     end
   end
 end
-

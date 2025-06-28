@@ -19,28 +19,30 @@ class TestSiretValidator < Minitest::Spec
     Company.validates_siret_of(:siret)
 
     model = Company.new(siret: INVALID_SIRET)
+
     assert_predicate model, :invalid?
-    assert model.errors.has_key?(:siret)
+    assert model.errors.key?(:siret)
 
     model.siret = VALID_SIRET
+
     assert_predicate model, :valid?
-    refute model.errors.has_key?(:siret)
+    refute model.errors.key?(:siret)
   end
 
   def test_validate_siret_cases
     Company.validates_siret_of(:siret)
 
     cases = {
-      nil               => :wrong_siret_format, # nil
-      ""                => :wrong_siret_format, # blank
-      "8216114310003"   => :wrong_siret_format, # too short
-      "invalid--siret"  => :wrong_siret_format, # invalid characters
-      "82161143100031"  => nil,                 # valid siret
+      nil => :wrong_siret_format, # nil
+      "" => :wrong_siret_format, # blank
+      "8216114310003" => :wrong_siret_format, # too short
+      "invalid--siret" => :wrong_siret_format, # invalid characters
+      "82161143100031" => nil,                 # valid siret
       "821611431000314" => :wrong_siret_format, # too long
-      "82161143100039"  => :invalid,            # invalid luhn
-      "35600000000048"  => nil,                 # La Poste siège
-      "35600000041461"  => nil,                 # La Poste établissement
-      "35600000041462"  => :invalid             # invalid La Poste établissement
+      "82161143100039" => :invalid,            # invalid luhn
+      "35600000000048" => nil,                 # La Poste siège
+      "35600000041461" => nil,                 # La Poste établissement
+      "35600000041462" => :invalid             # invalid La Poste établissement
     }
 
     cases.each do |(siret, expected_error)|
@@ -70,11 +72,11 @@ class TestSiretValidator < Minitest::Spec
     c = Company.new(siret: "foo")
 
     with_locale(:en) do
-      assert_equal c.tap(&:validate).errors[:siret], ["is the wrong length (should be 14 digits)"]
+      assert_equal ["is the wrong length (should be 14 digits)"], c.tap(&:validate).errors[:siret]
     end
 
     with_locale(:fr) do
-      assert_equal c.tap(&:validate).errors[:siret], ["ne fait pas la bonne longueur (doit comporter 14 chiffres)"]
+      assert_equal ["ne fait pas la bonne longueur (doit comporter 14 chiffres)"], c.tap(&:validate).errors[:siret]
     end
   end
 
@@ -82,7 +84,8 @@ class TestSiretValidator < Minitest::Spec
     Company.validates_siret_of(:siret, message: "is invalid")
 
     c = Company.new(siret: "foo").tap(&:validate)
-    assert_equal c.errors[:siret], ["is invalid"]
+
+    assert_equal ["is invalid"], c.errors[:siret]
   end
 
   private
@@ -90,7 +93,8 @@ class TestSiretValidator < Minitest::Spec
   def assert_siret_validity(siret, expected_error)
     model = Company.new(siret: siret).tap(&:validate)
     if expected_error.present?
-      assert(model.errors.where(:siret, expected_error).present?, "Expected '#{siret}' to generate a ':#{expected_error}' validation error")
+      assert_predicate(model.errors.where(:siret, expected_error), :present?,
+                       "Expected '#{siret}' to generate a ':#{expected_error}' validation error")
     else
       assert_empty(model.errors[:siret], "Expected '#{siret}' to be valid")
     end
