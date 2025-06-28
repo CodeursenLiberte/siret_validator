@@ -1,4 +1,4 @@
-_TODO: add badges_
+![Gem Version](https://badge.fury.io/rb/siret_validator.svg) ![build](https://github.com/CodeursenLiberte/siret_validator/actions/workflows/main.yml/badge.svg)
 
 # siret_validator
 
@@ -17,13 +17,13 @@ This gem provides a Rails validator for french [SIRET numbers](https://entrepren
 Install the gem and add to the application's Gemfile by executing:
 
 ```bash
-bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+bundle add siret_validator
 ```
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
 ```bash
-gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+gem install siret_validator
 ```
 
 Alternatively, you can vendor the gem by just copy-pasting the `lib/siret_validator.rb` file into your `app/validators` directory.
