@@ -1,12 +1,18 @@
-# SiretFormatValidator
+_TODO: add badges_
 
-TODO: Delete this and the text below, and describe your gem
+# siret_validator
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/siret_validator`. To experiment with that code, run `bin/console` for an interactive prompt.
+This gem provides a Rails validator for french [SIRET numbers](https://entreprendre.service-public.fr/vosdroits/F32135?lang=en).
+
+## Features
+
+* Validate the SIRET format (14 digits),
+* Validate the checksum of regular SIRETs (with luhn sum),
+* Validate the checksum of La Poste SIRETs (with the alternative checksum formula),
+* Clear localized error messages,
+* Ad-hoc error messages support.
 
 ## Installation
-
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
 
 Install the gem and add to the application's Gemfile by executing:
 
@@ -20,19 +26,49 @@ If bundler is not being used to manage dependencies, install the gem by executin
 gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
 ```
 
+Alternatively, you can vendor the gem by just copy-pasting the `lib/siret_validator.rb` file into your `app/validators` directory.
+
 ## Usage
 
-TODO: Write usage instructions here
+### With ActiveRecord
+
+```ruby
+class TaxesFilling < ApplicationRecord
+  validates :company_siret, siret: true
+end
+```
+
+### With ActiveModel
+
+```ruby
+class TaxesFilling
+  include ActiveModel::Validations
+
+  attr_accessor :company_siret
+  validates :company_siret, siret: true
+end
+```
+
+## I18n
+
+By default, the siret validator may emit two different error messages:
+
+* `:wrong_siret_format` – when the value is not an 14-digits string.
+
+    _The message is localized using a custom `:wrong_siret_format` i18n key. French and English locales are bundled with the gem._
+* `:invalid` – when the SIRET checksum is invalid.
+
+    _The message is localized using the standard Rails `:invalid` i18n key._
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `siret_validator.gemspec`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/siret_validator. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/siret_validator/blob/main/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/CodeursenLiberte/siret_validator. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/CodeursenLiberte/siret_validator/blob/main/CODE_OF_CONDUCT.md).
 
 ## License
 

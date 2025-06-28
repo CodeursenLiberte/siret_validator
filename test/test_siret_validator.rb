@@ -70,11 +70,11 @@ class TestSiretValidator < Minitest::Spec
     c = Company.new(siret: "foo")
 
     with_locale(:en) do
-      assert_equal c.tap(&:validate).errors[:siret], ["must be a number of exactly 14 digits"]
+      assert_equal c.tap(&:validate).errors[:siret], ["is the wrong length (should be 14 digits)"]
     end
 
     with_locale(:fr) do
-      assert_equal c.tap(&:validate).errors[:siret], ["doit être un numéro d’exactement 14 chiffres"]
+      assert_equal c.tap(&:validate).errors[:siret], ["ne fait pas la bonne longueur (doit comporter 14 chiffres)"]
     end
   end
 

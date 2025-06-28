@@ -1,4 +1,4 @@
 en:
   errors:
     messages:
-      wrong_siret_format: must be a number of exactly 14 digits
+      wrong_siret_format: is the wrong length (should be 14 digits)
