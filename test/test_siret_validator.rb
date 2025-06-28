@@ -78,6 +78,13 @@ class TestSiretValidator < Minitest::Spec
     end
   end
 
+  def test_validate_siret_with_custom_message
+    Company.validates_siret_of(:siret, message: "is invalid")
+
+    c = Company.new(siret: "foo").tap(&:validate)
+    assert_equal c.errors[:siret], ["is invalid"]
+  end
+
   private
 
   def assert_siret_validity(siret, expected_error)

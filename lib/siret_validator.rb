@@ -12,9 +12,9 @@ module ActiveModel
 
       def validate_each(record, attribute, value)
         if !valid_format?(value)
-          record.errors.add(attribute, :wrong_siret_format)
+          record.errors.add(attribute, :wrong_siret_format, **options)
         elsif !valid_checksum?(value)
-          record.errors.add(attribute, :invalid)
+          record.errors.add(attribute, :invalid, **options)
         end
       end
 
@@ -60,8 +60,8 @@ module ActiveModel
       # Validates whether the value of the specified attribute is a valid SIRET number.
       #
       # A SIRET number is valid if:
-      # * It is made of exactly 14 digits.
-      # * Its checksum is valid.
+      # * It is made of exactly 14 digits (otherwise a `:wrong_siret_format` error is added).
+      # * Its checksum is valid (otherwise an `:invalid` error is added).
       #
       #   class TaxesFilling
       #     include ActiveModel::Validations
@@ -70,8 +70,11 @@ module ActiveModel
       #   end
       #
       # Configuration options:
-      # * <tt>:allow_nil</tt> - If set to true, skips this validation if the attribute is +nil+ (default is +false+).
-      # * <tt>:allow_blank</tt> - If set to true, skips this validation if the attribute is blank (default is +false+).
+      # * <tt>:message</tt> - A custom error message.
+      #
+      # There is also a list of default options supported by every validator:
+      # +:if+, +:unless+, +:on+, +:allow_nil+, +:allow_blank+, and +:strict+.
+      # See ActiveModel::Validations::ClassMethods#validates for more information.
       def validates_siret_of(*attr_names)
         validates_with SiretValidator, _merge_attributes(attr_names)
       end
